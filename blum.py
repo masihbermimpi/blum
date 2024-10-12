@@ -5,9 +5,12 @@ import time
 import keyboard
 import random
 from pynput.mouse import Button, Controller
+import threading
 
 mouse = Controller()
 time.sleep(0.5)
+
+new_object_range = ((200, 100, 100), (255, 150, 150))
 
 def click(x, y):
     mouse.position = (x, y + random.randint(1, 3))
@@ -23,26 +26,28 @@ def print_welcome():
     ██████╔╝███████╗╚██████╔╝██║ ╚═╝ ██║    ██║  ██║██║  ██║╚██████╗██║  ██╗
     ╚═════╝ ╚══════╝ ╚═════╝ ╚═╝     ╚═╝    ╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝
                                                 
-    [!]  -  Blum Auto Clicker
-    [!]  -  Only Support Telegram Desktop !
-    [!]  -  Open Blum Before Start Program !
+    [!]  -  Blum Auto Clicker V 2.0
+    [!]  -  Only Support Telegram Desktop ! ( Hanya Support Telegram Desktop )
+    [!]  -  Open Blum Before Start Program ! ( Buka Blum Terlebih Dahulu )
+    
+    [!]  -  Author : Emrido
+    
     """)
 
 def print_pause_message(paused):
         if paused:
-            print('[-] | Program Paused, press "enter" to continue.')
+            print('    [-] | Program Paused, press "enter" to continue.')
         else:
-            print('[+] | Resuming work.')
+            print('    [+] | Resuming work.')
 
 def print_not_found_message(window_name):
-        print(f"[-] | Window - {window_name} not found ! Please open Blum")
+        print(f"    [-] | Window - {window_name} not found ! Please open Blum")
 
 def print_found_message(window_name):
-        print(f"[+] | Window found - {window_name}\n[+] | Press 'enter' to pause program.")
-
+        print(f"    [+] | Window found - {window_name}\n    [+] | Press 'enter' to pause program.")
 
 def print_stop_message():
-        print('[!] | Program stopped.')
+        print('    [!] | Program stopped.')
 
 print_welcome()
 
@@ -62,6 +67,27 @@ paused = False
 
 green_bacteria_range = ((102, 200, 0), (220, 255, 125))
 bomb_range = ((50, 50, 50), (200, 200, 200))
+
+def search_and_click_new_object():
+    while True:
+        time.sleep(4)  
+
+        scrn = pyautogui.screenshot(region=(window_rect[0], window_rect[1], window_rect[2], window_rect[3]))
+        width, height = scrn.size
+
+        for x in range(0, width, 20):
+            for y in range(0, height, 20):
+                r, g, b = scrn.getpixel((x, y))
+
+                if (new_object_range[0][0] <= r <= new_object_range[1][0]) and \
+                    (new_object_range[0][1] <= g <= new_object_range[1][1]) and \
+                    (new_object_range[0][2] <= b <= new_object_range[1][2]):
+                    screen_x = window_rect[0] + x
+                    screen_y = window_rect[1] + y
+                    click(screen_x, screen_y)
+                    break
+
+threading.Thread(target=search_and_click_new_object, daemon=True).start()
 
 while True:
     if keyboard.is_pressed('enter'):
