@@ -15,6 +15,8 @@
 
 ### Usage
 
+**Make sure open BLUM before run script**
+
 1. **Run the Script:**
 
    ```bash
@@ -27,4 +29,4 @@
 
 3. **Pause/Resume Auto-Clicking:**
 
-   Press 'enter' to pause/resume the auto-clicking.
+   Press 'enter' to pause/resume script.
